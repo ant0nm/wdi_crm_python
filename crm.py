@@ -9,13 +9,14 @@ class CRM:
             self.call_option(user_selected)
 
     def print_main_menu(self):
+        print()
         print('[1] Add a new contact')
         print('[2] Modify an existing contact')
         print('[3] Delete a contact')
         print('[4] Display all the contacts')
         print('[5] Search by attribute')
         print('[6] Exit')
-        print('Enter a number: ')
+        print('Enter a number: ', end="")
 
     def call_option(self, user_selected):
         if user_selected == 1:
@@ -35,30 +36,86 @@ class CRM:
 
     def add_new_contact(self):
         # get all the required info from our user:
-        print('Enter First Name: ')
+        print('Enter First Name: ', end="")
         first_name = input()
 
-        print('Enter Last Name: ')
+        print('Enter Last Name: ', end="")
         last_name = input()
 
-        print('Enter Email Address: ')
+        print('Enter Email Address: ', end="")
         email = input()
 
-        print('Enter a Note: ')
+        print('Enter a Note: ', end="")
         note = input()
 
         Contact.create(first_name, last_name, email, note)
 
 
-    # def modify_existing_contact(self):
-    #
-    #
-    # def delete_contact(self):
-    #
-    #
-    # def display_all_contacts(self):
-    #
-    # def search_by_attribute(self):
+    def modify_existing_contact(self):
+        print("Enter the ID of the contact you're looking for: ", end="")
+        entered_id = int(input())
+
+        print("Which attribute do you want to modify?")
+        print("* first_name")
+        print("* last_name")
+        print("* email")
+        print("* note")
+        print("Enter an attribute from the list above: ", end="")
+        entered_attribute = input()
+
+        print("Enter a new value for the selected attribute: ", end="")
+        entered_value = input()
+
+        selected_contact = Contact.find(entered_id)
+
+        if isinstance(selected_contact, str):
+            print(selected_contact)
+        else:
+            response = selected_contact.update(entered_attribute, entered_value)
+            if isinstance(response, str):
+                print(response)
+            else:
+                print("The selected contact has been modified to:")
+                print(selected_contact)
+
+    def delete_contact(self):
+        print("Enter the ID of the contact you wish to delete: ", end="")
+        entered_id = int(input())
+
+        selected_contact = Contact.find(entered_id)
+
+        if isinstance(selected_contact, str):
+            print(selected_contact)
+        else:
+            selected_contact.delete()
+            print("Contact has been successfully deleted.")
+
+    def display_all_contacts(self):
+        if len(Contact.contacts) == 0:
+            print("You have no contacts yet. There is nothing to display!")
+        else:
+            print("List of all your current contacts:")
+            for contact in Contact.contacts:
+                print("*", contact)
+
+    def search_by_attribute(self):
+        print("Which attribute do you want to search by?")
+        print("* first_name")
+        print("* last_name")
+        print("* email")
+        print("* note")
+        print("Enter an attribute from the list above: ", end="")
+        entered_attribute = input()
+
+        print("Enter your search term: ", end="")
+        entered_value = input()
+
+        response = Contact.find_by(entered_attribute, entered_value)
+
+        if not isinstance(response, str):
+            print("The first contact to match your search criteria:")
+
+        print(response)
 
 # create a customer relationship manager
 # open the main menu
