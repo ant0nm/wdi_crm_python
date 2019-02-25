@@ -16,7 +16,7 @@ class Contact:
         Contact.next_id += 1
 
     def __str__(self):
-        return "Name: {} \t Email: {} \t Note: {}".format((self.first_name + ' ' + self.last_name), self.email, self.note)
+        return "Name: {}  Email: {}  Note: {}  ID: {}".format((self.first_name + ' ' + self.last_name), self.email, self.note, self.id)
 
     @classmethod
     def create(cls, first_name, last_name, email, note):
@@ -30,51 +30,83 @@ class Contact:
     @classmethod
     def all(cls):
         """This method should return all of the existing contacts"""
+        return cls.contacts
 
     @classmethod
-    def find(cls):
+    def find(cls, requested_id):
         """ This method should accept an id as an argument
         and return the contact who has that id
         """
+        requested_contact = None
+        for contact in cls.contacts:
+            if contact.id == requested_id:
+                requested_contact = contact
+        if requested_contact:
+            return requested_contact
+        else:
+            return "Could not find contact with id of {}.".format(requested_id)
 
-    def update(self):
+    def update(self, attribute_to_update, new_value):
         """ This method should allow you to specify
         1. which of the contact's attributes you want to update
         2. the new value for that attribute
         and then make the appropriate change to the contact
         """
-
+        # every object created is stored as a dictionary
+        # get the current object's (self) dictionary
+        object_dict = self.__dict__
+        if attribute_to_update in object_dict.keys():
+            object_dict[attribute_to_update] = new_value
+        else:
+            return "Could not find a '{}' attribute in the selected contact.".format(attribute_to_update)
 
     @classmethod
-    def find_by(cls):
+    def find_by(cls, attribute_name, attribute_value):
         """This method should work similarly to the find method above
         but it should allow you to search for a contact using attributes other than id
         by specifying both the name of the attribute and the value
         eg. searching for 'first_name', 'Betty' should return the first contact named Betty
         """
+        requested_contact = None
+        if len(cls.contacts) == 0:
+            return "Your contacts are empty! There's nothing to search!"
+        else:
+            first_contact = cls.contacts[0]
+            contact_attributes = first_contact.__dict__.keys()
+            if attribute_name in contact_attributes:
+                for contact in cls.contacts:
+                    contact_dict = contact.__dict__
+                    if contact_dict[attribute_name] == attribute_value:
+                        requested_contact = contact
+                if requested_contact:
+                    return requested_contact
+                else:
+                    return "Could not find contact with attribute name '{}' and attribute value {}.".format(attribute_name, attribute_value)
+            else:
+                return "The attribute name '{}' is not valid!".format(attribute_name)
 
 
     @classmethod
     def delete_all(cls):
         """This method should delete all of the contacts"""
-
+        # remove all the stored contacts
+        cls.contacts.clear()
+        # reset the id to 1
+        cls.next_id = 1
 
     def full_name(self):
         """Returns the full (first and last) name of the contact"""
+        return self.first_name + ' ' + self.last_name
 
 
     def delete(self):
         """This method should delete the contact
         HINT: Check the Array class docs for built-in methods that might be useful here
         """
+        if self in Contact.contacts:
+            Contact.contacts.remove(self)
+        else:
+            return "There is no such contact!"
+
 
 # Feel free to add other methods here, if you need them.
-
-contact1 = Contact.create('Betty', 'Maker', 'bettymakes@gmail.com', 'Loves Pokemon')
-contact2 = Contact.create('Bit', 'Bot', 'bitbot@gmail.com', 'beep boop')
-print(contact1)
-print(contact2)
-
-print(len(Contact.contacts))
-print(contact1.id)
-print(contact2.id)
