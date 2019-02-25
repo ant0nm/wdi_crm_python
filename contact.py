@@ -106,7 +106,9 @@ class Contact:
         if self in Contact.contacts:
             removed_id = self.id
             Contact.contacts.remove(self)
-            # move all the ids > contact's id down by 1
+            # move all the ids > deleted contact's id down by 1
+            # this ensures that the mapping between order in list and ID is accurate
+            # first contact in the list will always have ID = 1, second will always have ID = 2, and so on...
             Contact.next_id -= 1
             for contact in Contact.contacts:
                 if contact.id > removed_id:
