@@ -96,7 +96,7 @@ class CRM:
         else:
             print("List of all your current contacts:")
             for contact in Contact.contacts:
-                print("*", contact)
+                print("*", contact.full_name())
 
     def search_by_attribute(self):
         print("Which attribute do you want to search by?")
@@ -113,7 +113,7 @@ class CRM:
         response = Contact.find_by(entered_attribute, entered_value)
 
         if not isinstance(response, str):
-            print("The first contact to match your search criteria:")
+            print("The FIRST contact to match your search criteria:")
 
         print(response)
 

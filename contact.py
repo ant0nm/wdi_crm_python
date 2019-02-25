@@ -76,7 +76,7 @@ class Contact:
             if attribute_name in contact_attributes:
                 for contact in cls.contacts:
                     contact_dict = contact.__dict__
-                    if contact_dict[attribute_name] == attribute_value:
+                    if (not requested_contact) and (contact_dict[attribute_name] == attribute_value):
                         requested_contact = contact
                 if requested_contact:
                     return requested_contact
@@ -104,7 +104,13 @@ class Contact:
         HINT: Check the Array class docs for built-in methods that might be useful here
         """
         if self in Contact.contacts:
+            removed_id = self.id
             Contact.contacts.remove(self)
+            # move all the ids > contact's id down by 1
+            Contact.next_id -= 1
+            for contact in Contact.contacts:
+                if contact.id > removed_id:
+                    contact.id -= 1
         else:
             return "There is no such contact!"
 
