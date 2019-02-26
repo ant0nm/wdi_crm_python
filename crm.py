@@ -71,7 +71,7 @@ class CRM:
         print("Enter a new value for the selected attribute: ", end="")
         entered_value = input()
 
-        selected_contact = Contact.find(entered_id)
+        selected_contact = Contact.get(id = entered_id)
 
         if isinstance(selected_contact, str):
             print(selected_contact)
@@ -87,7 +87,7 @@ class CRM:
         print("Enter the ID of the contact you wish to delete: ", end="")
         entered_id = int(input())
 
-        selected_contact = Contact.find(entered_id)
+        selected_contact = Contact.get(id = entered_id)
 
         if isinstance(selected_contact, str):
             print(selected_contact)
