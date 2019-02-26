@@ -96,11 +96,11 @@ class CRM:
             print("Contact has been successfully deleted.")
 
     def display_all_contacts(self):
-        if len(Contact.contacts) == 0:
+        if len(Contact.select()) == 0:
             print("You have no contacts yet. There is nothing to display!")
         else:
             print("List of all your current contacts:")
-            for contact in Contact.contacts:
+            for contact in Contact.select():
                 print("*", contact.full_name())
 
     def search_by_attribute(self):
