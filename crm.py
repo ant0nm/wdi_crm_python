@@ -55,6 +55,8 @@ class CRM:
             note = note
         )
 
+        print("A new contact has been added successfully!")
+
     def modify_existing_contact(self):
         print("Enter the ID of the contact you're looking for: ", end="")
         entered_id = int(input())
@@ -111,13 +113,15 @@ class CRM:
 
         print("Enter your search term: ", end="")
         entered_value = input()
-
-        response = Contact.find_by(entered_attribute, entered_value)
-
-        if not isinstance(response, str):
-            print("The FIRST contact to match your search criteria:")
-
-        print(response)
+        try:
+            field = getattr(Contact, entered_attribute)
+            selected_contact = Contact.get(field == entered_value)
+            print("A match was found:")
+            print("[{}   Email: {}   Note: {}]".format(selected_contact.full_name(), selected_contact.email, selected_contact.note))
+        except AttributeError:
+            print("Attribute name '{}' is not valid. Try again!".format(entered_attribute))
+        except Contact.DoesNotExist:
+            print("No contact matching selected search criteria.")
 
 # create a customer relationship manager
 # open the main menu
