@@ -55,7 +55,6 @@ class CRM:
             note = note
         )
 
-
     def modify_existing_contact(self):
         print("Enter the ID of the contact you're looking for: ", end="")
         entered_id = int(input())
@@ -81,30 +80,16 @@ class CRM:
         except:
             print("Invalid entry, no data was modified. Try again!")
 
-        # selected_contact = Contact.get(id = entered_id)
-        #
-        #
-        # if isinstance(selected_contact, str):
-        #     print(selected_contact)
-        # else:
-        #     response = selected_contact.update(entered_attribute, entered_value)
-        #     if isinstance(response, str):
-        #         print(response)
-        #     else:
-        #         print("The selected contact has been modified to:")
-        #         print(selected_contact)
-
     def delete_contact(self):
         print("Enter the ID of the contact you wish to delete: ", end="")
         entered_id = int(input())
 
-        selected_contact = Contact.get(id = entered_id)
-
-        if isinstance(selected_contact, str):
-            print(selected_contact)
-        else:
-            selected_contact.delete()
-            print("Contact has been successfully deleted.")
+        try:
+            selected_contact = Contact.get(id = entered_id)
+            selected_contact.delete_instance()
+            print("Contact with ID {} has been deleted successfully.".format(entered_id))
+        except Contact.DoesNotExist:
+            print("The entered ID does not exist. Try again!")
 
     # use Contact.select() to get a list of all the contacts currently stored in the db
     def display_all_contacts(self):
@@ -113,7 +98,7 @@ class CRM:
         else:
             print("List of all your current contacts:")
             for contact in Contact.select():
-                print("*", contact.full_name())
+                print("*", contact.full_name(), "[ID: {}]".format(contact.id))
 
     def search_by_attribute(self):
         print("Which attribute do you want to search by?")
