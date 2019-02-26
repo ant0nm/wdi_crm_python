@@ -71,17 +71,28 @@ class CRM:
         print("Enter a new value for the selected attribute: ", end="")
         entered_value = input()
 
-        selected_contact = Contact.get(id = entered_id)
-
-        if isinstance(selected_contact, str):
-            print(selected_contact)
-        else:
-            response = selected_contact.update(entered_attribute, entered_value)
-            if isinstance(response, str):
-                print(response)
+        try:
+            update_query = Contact.update({entered_attribute: entered_value}).where(Contact.id == entered_id)
+            n_rows = update_query.execute()
+            if n_rows == 0:
+                print("The ID specified does not exist. No contact was modified. Try again!")
             else:
-                print("The selected contact has been modified to:")
-                print(selected_contact)
+                print("Contact with ID {} has been successfully updated!".format(entered_id))
+        except:
+            print("Invalid entry, no data was modified. Try again!")
+
+        # selected_contact = Contact.get(id = entered_id)
+        #
+        #
+        # if isinstance(selected_contact, str):
+        #     print(selected_contact)
+        # else:
+        #     response = selected_contact.update(entered_attribute, entered_value)
+        #     if isinstance(response, str):
+        #         print(response)
+        #     else:
+        #         print("The selected contact has been modified to:")
+        #         print(selected_contact)
 
     def delete_contact(self):
         print("Enter the ID of the contact you wish to delete: ", end="")
@@ -95,6 +106,7 @@ class CRM:
             selected_contact.delete()
             print("Contact has been successfully deleted.")
 
+    # use Contact.select() to get a list of all the contacts currently stored in the db
     def display_all_contacts(self):
         if len(Contact.select()) == 0:
             print("You have no contacts yet. There is nothing to display!")
